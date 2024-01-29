@@ -32,7 +32,19 @@
     <link href="<?= base_url() ?>assets/css/app.min.css" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href="<?= base_url() ?>assets/css/custom.min.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" /> 
+    <script src="<?= base_url() ?>assets/js/html5-qrcode.min.js"></script>
+    <style>
+    .result{
+        background-color: green;
+        color:#fff;
+        padding:20px;
+    }
+    .row{
+        display:flex;
+    }
+    </style>
+
 </head>
 
 <body>
