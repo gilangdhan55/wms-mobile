@@ -115,7 +115,8 @@
                     <label for="nameInputPal" class="form-label">PAL</label>
                 </div>
                 <div class="col-sm-9 d-flex justify-content-between align-items-center">
-                    <input type="text" class="form-control" id="nameInputPal" readonly>
+                    <input type="text" class="form-control" id="nameInputPal"  onclick="palNO()" onchange="fetchPalNo(this.value)">
+                    <input type="checkbox" id="autoBox" name="autobox" hidden>
                     <div class="checkPal" style="display: none;">
                         <span><i data-feather="check" style="color: green;"></i></span>
                     </div>
@@ -129,7 +130,7 @@
                     <label for="nameInputBin" class="form-label">BIN</label>
                 </div>
                 <div class="col-sm-9 d-flex justify-content-between align-items-center"> 
-                    <input type="text" class="form-control" id="nameInputBin" readonly>
+                    <input type="text" class="form-control" id="nameInputBin"  onclick="scanBin()">
                     <div class="checkBin" style="display: none;">
                         <span><i data-feather="check" style="color: green;"></i></span>
                     </div>
@@ -174,37 +175,81 @@
         fps: 20,  
     });
  
+   
+    async function successPalno(result) {
 
-    async function success(result) {
-        const NOPO      = document.querySelector('.buttonPut').dataset.po;
-         
-        let bodyData    = {
-            "nopo": NOPO,
-            "result" : result
-        }
-        const checking  = await searchNopal(bodyData)
-        
-        const prosesQR = await processResult(checking)
-  
+        $("#nameInputPal").val(result)
 
-        document.getElementById('div-scan-again').style.display='block'
-    
+        await fetchPalNo(result); 
     }
 
-    function error(err) {
+    async function successBin(result) {
+
+        $("#nameInputBin").val(result)
+
+        if($("#autoBox").prop("checked", true)){ 
+            await fetchBin(result); 
+        }
+
+    }
+
+    async function fetchPalNo(result)
+    {
+        const NOPO      = document.querySelector('.buttonPut').dataset.po;
+         
+         let bodyData    = {
+             "nopo": NOPO,
+             "result" : result
+         } 
+         let checking  = await searchNopal(bodyData)
+ 
+         await processResultNopal(checking)
+           
+         document.getElementById('div-scan-again').style.display='block' 
+    }
+
+    async function fetchBin(result)
+    {
+        const NOPO      = document.querySelector('.buttonPut').dataset.po;
+        const NOPAL     = document.getElementById('nameInputPal').value;
+         
+         let bodyData    = {
+             "nopo": NOPO,
+             "nopal": NOPAL,
+             "result" : result
+         } 
+         let checking  = await searchBin(bodyData)
+
+         console.log(bodyData)
+ 
+         await processResultBin(checking)
+           
+        //  document.getElementById('div-scan-again').style.display='block' 
+    }
+  
+
+    function errorr(err) {
         // console.error(err);
         // Prints any errors to the console
     }
 
-    function onScan (){
+    async function onScan (){
         scanner.render(success, error);
     } 
 
-    
+    async function palNO()
+    { 
+        scanner.render(successPalno, errorr);  
+    }
+
+    async function scanBin()
+    {  
+        scanner.render(successBin, errorr);  
+    }
 
     $(document).on('click', '.buttonPut', function(){
         $('#ScanModal').modal('show');
-        onScan()
+        // onScan()
     });
 
     $(document).on('click', '#div-scan-again', function(){ 
@@ -215,7 +260,23 @@
 
     async function searchNopal(form){
         try {
-            const response = await fetch("<?= base_url('findScan') ?>", {
+            const response = await fetch("<?= base_url('findScanNoPal') ?>", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+            });
+
+            const result = await response.json();
+            return result
+        } catch (error) {
+            console.error("Error:", error);
+        } 
+
+    }
+   
+    async function searchBin(form){
+        try {
+            const response = await fetch("<?= base_url('findScanBin') ?>", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form),
@@ -230,37 +291,71 @@
     }
 
 
-    async function processResult(data) {
+    async function processResultNopal(data) {
         if(data.success === true)
-        {
-            if(data.data.length < 2)
-            {
-                $.each(data.data, function(key, value) {
-                    $("#nameInputPal").val(value.PaletNo)
-                    if(value.PaletNo)
-                    {
-                        $(".checkPal").show()
-                        $(".xclosePal").hide()
-                    }
-                    $("#nameInputBin").val(value.Bin)
-                });
+        { 
+            $("#nameInputPal").val(data.data.PaletNo)
 
-                
+            if(data.data.auto === "0")
+            { 
+                $("#autoBox").prop('checked', false)
                 $(".checkBin").show() 
+                $(".xcloseBin").hide()
+            } 
+            $(".checkPal").show()
+            $(".xclosePal").hide()
+
+            if(data.data.auto === "1")
+            {
+                $("#autoBox").prop('checked', true)
+                $("#nameInputBin").click();
+                $("#nameInputBin").focus();
+                $(".checkBin").hide() 
                 $(".xcloseBin").hide()
             }
         }
 
         if(data.success === false)
-        {
-            $("#nameInputPal").val("")
-            $("#nameInputBin").val("")
+        { 
+            $("#nameInputPal").val(data.Nopal) 
             $(".checkPal").hide()
-            $(".xclosePal").show()
-            $(".checkBin").hide() 
-            $(".xcloseBin").show()
+            $(".xclosePal").show() 
         }
     }
+
+    async function processResultBin(data) {
+        // if(data.success === true)
+        // { 
+        //     $("#nameInputPal").val(data.data.PaletNo)
+
+        //     if(data.data.auto === "0")
+        //     { 
+        //         $("#autoBox").prop('checked', false)
+        //         $(".checkBin").show() 
+        //         $(".xcloseBin").hide()
+        //     } 
+        //     $(".checkPal").show()
+        //     $(".xclosePal").hide()
+
+        //     if(data.data.auto === "1")
+        //     {
+        //         $("#autoBox").prop('checked', true)
+        //         $("#nameInputBin").click();
+        //         $("#nameInputBin").focus();
+        //         $(".checkBin").hide() 
+        //         $(".xcloseBin").hide()
+        //     }
+        // }
+
+        if(data.success === false)
+        { 
+            $("#nameInputBin").val(data.bin) 
+            $(".checkBin").hide()
+            $(".xcloseBin").show() 
+        }
+    }
+
+
 </script>
 
 <?php $this->view('template/footer') ?>

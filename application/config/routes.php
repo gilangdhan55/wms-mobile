@@ -57,4 +57,5 @@ $route['translate_uri_dashes']  = FALSE;
 //WMS
 $route['put']                     = 'wms/index';    
 $route['put/(:any)']              = 'wms/put/$1';
-$route['findScan']                = 'wms/findScan';
+$route['findScanNoPal']           = 'wms/findScanNoPal';
+$route['findScanBin']             = 'wms/findScanBin';
