@@ -32,18 +32,9 @@
     <link href="<?= base_url() ?>assets/css/app.min.css" rel="stylesheet" type="text/css" />
     <!-- custom Css-->
     <link href="<?= base_url() ?>assets/css/custom.min.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" /> 
-    <script src="<?= base_url() ?>assets/js/html5-qrcode.min.js"></script>
-    <style>
-    .result{
-        background-color: green;
-        color:#fff;
-        padding:20px;
-    }
-    .row{
-        display:flex;
-    }
-    </style>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />  
+    <script src="<?= base_url() ?>node_modules/html5-qrcode/html5-qrcode.min.js"></script>
+     
 
 </head>
 
@@ -195,8 +186,7 @@
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
                                         <a href="<?= base_url('put') ?>" class="nav-link " data-key="t-analytics"> PUT </a>
-                                    </li>
-                                     
+                                    </li> 
                                 </ul>
                             </div>
                         </li>   

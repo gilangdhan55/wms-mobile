@@ -27,4 +27,28 @@ class Wms extends CI_Controller {
          $data['allpo']     = $getALLPO; 
 		$this->load->view('put/list_po', $data);
     }
+
+    public function findScan()
+    {
+        $response       = array();
+        $json_input 	= json_decode(file_get_contents('php://input'), true);
+         
+        $result         = $this->Wms_Model->find_scan_put($json_input);
+        
+        if($result){
+            $response   = array(
+                "success"   => true,
+                "message"   => "Data berhasil di dapatkan",
+                "data"      => $result
+            );
+        }else{
+            $response   = array(
+                "success"   => false,
+                "message"   => "Data tidak ditemukan"
+            );
+        }
+
+        echo json_encode($response);
+         
+    }
 }

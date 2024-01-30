@@ -1,6 +1,19 @@
 <?php $this->view('template/header') ?>
 
-
+<style>
+     main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #reader {
+        width: 600px;
+    }
+    #result {
+        text-align: center;
+        font-size: 1.5rem;
+    }
+</style>
 
   <!-- start page title -->
   <div class="row">
@@ -22,8 +35,13 @@
 
 
 <div class="row">
-    <div class="col-6 putArea">
+    <div class="col-12 putArea">
         <div class="card card-h-100">
+            <div class="button" style="padding: 10px;"> 
+                <a type="button" class="btn btn-primary btn-icon waves-effect waves-light" href="<?= base_url('put') ?>"><i data-feather="arrow-left"></i></a>
+                <a type="button" class="btn btn-warning btn-icon waves-effect waves-light" href="<?= base_url().'put/'.$this->uri->rsegment(3) ?>"><i data-feather="refresh-cw"></i></a>
+                <button type="button" class="btn btn-success btn-icon waves-effect waves-light buttonPut" data-po="<?= $this->uri->rsegment(3) ?>">PUT</button>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table" id="tablePutWMS">
@@ -32,7 +50,7 @@
                                 <th style="text-align: center;">#</th>
                                 <th style="text-align: center;">PALNO</th>
                                 <th style="text-align: center;">BIN</th>
-                                <th style="text-align: center;">AUTO</th>  
+                                <th style="text-align: center;">AUTO</th>   
                             </tr>
                         </thead>
                         <tbody>
@@ -46,7 +64,7 @@
                                         <div class="form-check form-switch" style="text-align: center;">
                                             <input class="form-check-input" type="checkbox" role="switch" id="SwitchCheck1" <?= $all->auto == "1" ? "checked" : "" ?> disabled> 
                                         </div><br>
-                                    </td> 
+                                    </td>  
                                 </tr>
                             <?php $no++; ?>
                             <?php endforeach; ?>
@@ -55,18 +73,12 @@
                 </div> 
             </div>
         </div> 
-    </div>
+    </div> 
+  
+</div>
 
-    <div class="col-1">
-        <div class="card card-h-100">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <button type="button" class="btn btn-outline-success btn-sm btn-icon waves-effect waves-light buttonPut" data-bs-toggle="modal" data-bs-target="#ScanModal">PUT</button>
-                </div> 
-            </div>
-        </div> 
-    </div>
-    <div class="col-5">
+<div class="row">
+    <div class="col-12">
         <div class="card card-h-100">
             <div class="card-body">
                 <div class="table-responsive">
@@ -89,7 +101,7 @@
 </div>
 
 
-<div class="modal fade zoomIn" id="ScanModal" tabindex="-1" aria-labelledby="ScanModalLabel" aria-hidden="true">
+<div class="modal fade zoomIn" id="ScanModal" styl="display: none;">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -98,30 +110,45 @@
       </div>
       <div class="modal-body">
         <form action="">
+            <div class="row mb-3 ">
+                <div class="col-sm-3">
+                    <label for="nameInputPal" class="form-label">PAL</label>
+                </div>
+                <div class="col-sm-9 d-flex justify-content-between align-items-center">
+                    <input type="text" class="form-control" id="nameInputPal" readonly>
+                    <div class="checkPal" style="display: none;">
+                        <span><i data-feather="check" style="color: green;"></i></span>
+                    </div>
+                    <div class="xclosePal" style="display: none;">
+                        <span><i data-feather="x" style="color: red;"></i></span>
+                    </div>
+                </div>
+            </div>
             <div class="row mb-3">
                 <div class="col-lg-3">
-                    <label for="nameInput" class="form-label">PAL</label>
+                    <label for="nameInputBin" class="form-label">BIN</label>
                 </div>
-                <div class="col-lg-9">
-                    <input type="text" class="form-control" id="nameInput" placeholder="Enter your name">
-                </div>
-            </div>
-            <div class="row mb-3">
-                <div class="col-lg-3">
-                    <label for="nameInput" class="form-label">BIN</label>
-                </div>
-                <div class="col-lg-9">
-                    <input type="text" class="form-control" id="nameInput" placeholder="Enter your name">
+                <div class="col-sm-9 d-flex justify-content-between align-items-center"> 
+                    <input type="text" class="form-control" id="nameInputBin" readonly>
+                    <div class="checkBin" style="display: none;">
+                        <span><i data-feather="check" style="color: green;"></i></span>
+                    </div>
+                    <div class="xcloseBin" style="display: none;">
+                        <span><i data-feather="x" style="color: red;"></i></span>
+                    </div>
                 </div>
             </div>
-            <div class="row">
-            <div class="col">
-                <div style="width:500px;" id="reader"></div>
-            </div>
-            <div class="col" style="padding:30px;">
-                <h4>SCAN RESULT</h4>
-                <div class="result" id="result">Result Here</div>
-            </div>
+            <div class="row mb-3" >
+                <main>
+                    <div id="reader"></div> 
+                </main> 
+            </div> 
+            <div class="row mb-3 div-scan-again" id="div-scan-again" style="display: none;"> 
+                <div class="col-12" style="text-align: center;">
+                    <div>
+                        <button type="button" class="btn btn-success   waves-effect waves-light">SCAN AGAIN</button>
+                    </div> 
+                </div>
             </div>
         </form>         
       </div>
@@ -133,21 +160,107 @@
   </div>
 </div>
 
-<script>
+<script> 
     $('#tablePutWMS').DataTable();
     $('#tableScan').DataTable();
  
 </script>
 <script type="text/javascript">
-function onScanSuccess(qrCodeMessage) {
-    document.getElementById('result').innerHTML = '<span class="result">'+qrCodeMessage+'</span>';
-}
-function onScanError(errorMessage) {
-  //handle scan error
-}
-var html5QrcodeScanner = new Html5QrcodeScanner(
-    "reader", { fps: 10, qrbox: 250 });
-html5QrcodeScanner.render(onScanSuccess, onScanError);
+    const scanner = new Html5QrcodeScanner('reader', {  
+        qrbox: {
+            width: 250,
+            height: 250,
+        },   
+        fps: 20,  
+    });
+ 
+
+    async function success(result) {
+        const NOPO      = document.querySelector('.buttonPut').dataset.po;
+         
+        let bodyData    = {
+            "nopo": NOPO,
+            "result" : result
+        }
+        const checking  = await searchNopal(bodyData)
+        
+        const prosesQR = await processResult(checking)
+  
+
+        document.getElementById('div-scan-again').style.display='block'
+    
+    }
+
+    function error(err) {
+        // console.error(err);
+        // Prints any errors to the console
+    }
+
+    function onScan (){
+        scanner.render(success, error);
+    } 
+
+    
+
+    $(document).on('click', '.buttonPut', function(){
+        $('#ScanModal').modal('show');
+        onScan()
+    });
+
+    $(document).on('click', '#div-scan-again', function(){ 
+        $(this).hide()
+        onScan()
+    });
+   
+
+    async function searchNopal(form){
+        try {
+            const response = await fetch("<?= base_url('findScan') ?>", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(form),
+            });
+
+            const result = await response.json();
+            return result
+        } catch (error) {
+            console.error("Error:", error);
+        } 
+
+    }
+
+
+    async function processResult(data) {
+        if(data.success === true)
+        {
+            if(data.data.length < 2)
+            {
+                $.each(data.data, function(key, value) {
+                    $("#nameInputPal").val(value.PaletNo)
+                    if(value.PaletNo)
+                    {
+                        $(".checkPal").show()
+                        $(".xclosePal").hide()
+                    }
+                    $("#nameInputBin").val(value.Bin)
+                });
+
+                
+                $(".checkBin").show() 
+                $(".xcloseBin").hide()
+            }
+        }
+
+        if(data.success === false)
+        {
+            $("#nameInputPal").val("")
+            $("#nameInputBin").val("")
+            $(".checkPal").hide()
+            $(".xclosePal").show()
+            $(".checkBin").hide() 
+            $(".xcloseBin").show()
+        }
+    }
 </script>
 
 <?php $this->view('template/footer') ?>
