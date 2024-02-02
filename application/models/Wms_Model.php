@@ -47,9 +47,9 @@ class Wms_Model extends CI_Model
          $sql        = "SELECT PaletNo, Bin, WmsRead, auto FROM wms_put WHERE Grpo = '$Grpo' AND PaletNo = '$nopal' AND bin = '$bin'";
 
          $query      = $this->db->query($sql);
-       
+        
          $result     = $query->row(); 
- 
+       
          return $result; 
      }
 }

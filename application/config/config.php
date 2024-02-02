@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */ 
-$config['base_url'] = 'https://6029-110-137-193-146.ngrok-free.app/wms-mobile/';
+$config['base_url'] = 'https://f95a-103-169-73-2.ngrok-free.app/wms-mobile/';
 // $config['base_url'] = 'http://'.$_SERVER['HTTP_HOST'].'/wms-mobile/';
 // $config['base_url'] = 'http://'.$_SERVER['SERVER_ADDR'].'/wms-mobile/';
 
@@ -37,7 +37,7 @@ $config['base_url'] = 'https://6029-110-137-193-146.ngrok-free.app/wms-mobile/';
 | variable so that it is blank.
 |
 */
-$config['index_page'] = 'index.php';
+$config['index_page'] = '';
 
 /*
 |--------------------------------------------------------------------------
